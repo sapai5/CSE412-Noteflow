@@ -126,10 +126,10 @@ SECRET_KEY=your_jwt_secret
 python test_endpoints.py
 ```
 
-## 👥 Team - Group 25
+## 👥 Team
 
-- Brandon Lim
 - Sahil Pai
+- Brandon Lim
 - Saahir Khan
 - Sourish Tiwari
 
