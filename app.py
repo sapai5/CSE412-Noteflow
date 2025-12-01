@@ -4,11 +4,11 @@
 # SELECT setval('tags_tag_id_seq', (SELECT MAX(tag_id) FROM tags) + 1);
 # SELECT setval('notetags_notetag_id_seq', (SELECT MAX(notetag_id) FROM notetags) + 1);
 
-from flask import Flask, request, jsonify
+from flask import Flask, request, jsonify, render_template
 from flask_cors import CORS
 from functools import wraps
-import psycopg2
-from psycopg2.extras import RealDictCursor
+import psycopg
+from psycopg.rows import dict_row
 import bcrypt
 import jwt
 import os
@@ -37,9 +37,13 @@ DB_CONFIG = {
 
 def get_db_connection():
     """Create and return a database connection."""
-    conn = psycopg2.connect(
-        **DB_CONFIG,
-        cursor_factory=RealDictCursor
+    # psycopg uses 'dbname' instead of 'database'
+    config = DB_CONFIG.copy()
+    if 'database' in config:
+        config['dbname'] = config.pop('database')
+    conn = psycopg.connect(
+        **config,
+        row_factory=dict_row
     )
     return conn
 
@@ -138,7 +142,7 @@ def register():
                 'token': token
             }), 201
 
-        except psycopg2.errors.UniqueViolation as e:
+        except psycopg.errors.UniqueViolation as e:
             conn.rollback()
             error_msg = str(e)
             if 'email' in error_msg or 'users_email_key' in error_msg:
@@ -344,7 +348,7 @@ def update_user(current_user_id, user_id):
             }
         }), 200
 
-    except psycopg2.errors.UniqueViolation:
+    except psycopg.errors.UniqueViolation:
         return jsonify({'error': 'Email already exists'}), 409
     except Exception as e:
         return jsonify({'error': str(e)}), 500
@@ -645,7 +649,7 @@ def create_note(current_user_id):
                 tag = cur.fetchone()
                 if tag:
                     tags.append({'tag_id': tag['tag_id'], 'tag_name': tag['tag_name'], 'color': tag['color']})
-            except psycopg2.errors.ForeignKeyViolation:
+            except psycopg.errors.ForeignKeyViolation:
                 conn.rollback()
                 return jsonify({'error': f'Tag with id {tag_id} does not exist'}), 400
 
@@ -736,7 +740,7 @@ def update_note(current_user_id, note_id):
                         """,
                         (note_id, tag_id)
                     )
-                except psycopg2.errors.ForeignKeyViolation:
+                except psycopg.errors.ForeignKeyViolation:
                     conn.rollback()
                     return jsonify({'error': f'Tag with id {tag_id} does not exist'}), 400
 
@@ -972,7 +976,7 @@ def create_tag(current_user_id):
                 }
             }), 201
 
-        except psycopg2.errors.UniqueViolation:
+        except psycopg.errors.UniqueViolation:
             conn.rollback()
             return jsonify({'error': 'Tag name already exists'}), 409
 
@@ -1040,7 +1044,7 @@ def update_tag(current_user_id, tag_id):
                 }
             }), 200
 
-        except psycopg2.errors.UniqueViolation:
+        except psycopg.errors.UniqueViolation:
             conn.rollback()
             return jsonify({'error': 'Tag name already exists'}), 409
 
@@ -1172,7 +1176,7 @@ def add_tag_to_note(current_user_id, note_id, tag_id):
                 }
             }), 201
 
-        except psycopg2.errors.UniqueViolation:
+        except psycopg.errors.UniqueViolation:
             conn.rollback()
             return jsonify({'error': 'Tag is already assigned to this note'}), 409
 
@@ -1323,6 +1327,14 @@ def search_notes(current_user_id):
 
     except Exception as e:
         return jsonify({'error': str(e)}), 500
+
+
+# ==================== WEB INTERFACE ====================
+
+@app.route('/')
+def index():
+    """Serve the web interface."""
+    return render_template('index.html')
 
 
 # ==================== HEALTH CHECK ====================

@@ -1,14 +1,14 @@
-import psycopg2
+import psycopg
 
 try:
-    conn = psycopg2.connect(
+    conn = psycopg.connect(
         host='localhost',
         port='5432',
         database='---',  # Change to your actual DB name
         user='postgres',
         password='---'  # Your actual password
     )
-    print("✅ Connected successfully!")
+    print("[SUCCESS] Connected successfully!")
     conn.close()
 except Exception as e:
-    print(f"❌ Connection failed: {e}")
+    print(f"[ERROR] Connection failed: {e}")
