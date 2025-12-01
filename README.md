@@ -1,21 +1,19 @@
-# 📝 NoteFlow - Note-Taking Application
+# NoteFlow - Note-Taking Application
 
 A full-stack note-taking application built with Flask and PostgreSQL, featuring user authentication, tagging system, and a real-time statistics dashboard.
 
-## 🎯 Overview
+## Overview
 
 NoteFlow helps users create, organize, and manage notes efficiently. Users can pin important notes, archive old ones, and categorize them with color-coded tags for easy retrieval.
 
-**Built for CSE 412 - Database Management (Phase 2)**
-
-## 🛠️ Tech Stack
+## Tech Stack
 
 - **Backend:** Python, Flask
 - **Database:** PostgreSQL
 - **Authentication:** JWT (JSON Web Tokens), bcrypt
 - **Frontend:** HTML, CSS, JavaScript
 
-## ✨ Features
+## Features
 
 - **User Authentication** - Secure registration/login with JWT tokens
 - **Notes Management** - Create, read, update, delete notes
@@ -26,13 +24,7 @@ NoteFlow helps users create, organize, and manage notes efficiently. Users can p
 - **User Dashboard** - Real-time statistics (total notes, active tags, etc.)
 - **Data Integrity** - CASCADE deletes, check constraints, parameterized queries
 
-## 📊 Database Schema
-
-```
-users ──────< notes >────── notetags ──────< tags
-  │                              
-  └──── userstats                
-```
+## Database Schema
 
 - **users** - User accounts with bcrypt-hashed passwords
 - **userstats** - Dashboard statistics per user
@@ -40,7 +32,7 @@ users ──────< notes >────── notetags ──────<
 - **tags** - Color-coded tags for categorization
 - **notetags** - Junction table for note-tag associations
 
-## 🚀 Quick Start
+## Quick Start
 
 ### Prerequisites
 - Python 3.8+
@@ -79,7 +71,7 @@ DB_PASSWORD=your_password
 SECRET_KEY=your_jwt_secret
 ```
 
-## 📡 API Endpoints
+## API Endpoints
 
 ### Authentication
 | Method | Endpoint | Description |
@@ -119,7 +111,7 @@ SECRET_KEY=your_jwt_secret
 | GET | `/api/search?q=query` | Search notes |
 | GET | `/api/health` | Health check |
 
-## 🧪 Testing
+## Testing
 
 ```bash
 # Run test suite
@@ -131,13 +123,10 @@ python app.py
 python debug_api.py
 ```
 
-## 👥 Team
+## Team
 
 - Sahil Pai
 - Brandon Lim
 - Saahir Khan
 - Sourish Tiwari
 
-## 📄 License
-
-This project was created for educational purposes as part of CSE 412 at Arizona State University.
