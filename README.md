@@ -123,7 +123,12 @@ SECRET_KEY=your_jwt_secret
 
 ```bash
 # Run test suite
-python test_endpoints.py
+python DBtestConnection.py
+python app.py
+python apiTest.py
+# If this doesn't work
+python app.py
+python debug_api.py
 ```
 
 ## 👥 Team
